@@ -94,3 +94,26 @@ def test_article_title_length():
             body=body,
             likes=likes
         )
+
+
+def test_article_body_regex_trigger():
+    article_id = 1
+    author_id = 101
+    created_at = datetime.now()
+    updated_at = datetime.now()
+    topic = "Technology"
+    title = "Introduction to Python '*"
+    body = "Python ....."
+    likes = ["user1", "user2"]
+
+    with pytest.raises(ValidationError):
+        article = Article(
+            article_id=article_id,
+            author_id=author_id,
+            created_at=created_at,
+            updated_at=updated_at,
+            topic=topic,
+            title=title,
+            body=body,
+            likes=likes
+        )
