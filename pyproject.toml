@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "tui"
+version = "0.1.0"
+description = ""
+authors = ["lorenzo <adducilorenzo@hotmail.it>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+valid8 = "^5.1.2"
+pytest = "^7.4.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
