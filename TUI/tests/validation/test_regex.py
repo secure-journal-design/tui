@@ -1,4 +1,4 @@
-from validation.regex import pattern
+from TUI.validation.regex import pattern
 
 
 def test_regex_for_int():

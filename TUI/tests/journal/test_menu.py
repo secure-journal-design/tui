@@ -3,7 +3,7 @@ from unittest.mock import patch, call, Mock
 import pytest
 from valid8 import ValidationError
 
-from journal.menu import Description, Key, Entry, Menu
+from TUI.journal.menu import Description, Key, Entry, Menu
 
 
 def test_description_must_be_string():

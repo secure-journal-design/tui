@@ -4,7 +4,7 @@ from typing import Callable, List, Dict, Optional, Any
 from typeguard import typechecked
 from valid8 import validate
 
-from validation.regex import pattern
+from TUI.validation.regex import pattern
 
 
 @typechecked
