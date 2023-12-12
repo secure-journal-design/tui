@@ -1,5 +1,7 @@
 import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
+
 from typeguard import typechecked
 from valid8 import validate
 
@@ -69,3 +71,19 @@ class Article:
     body: Body
     likes: int
     subheading: Subheading
+
+
+@typechecked
+@dataclass(frozen=True)
+class Journal:
+    __articles: List[Article] = field(default_factory=list, init=False)
+
+    def articles(self) -> int:
+        return len(self.__articles)
+
+    def article(self, index: int) -> Article:
+        return self.__articles[index]
+
+    def add_article(self, article: Article) -> None:
+        self.__articles.append(article)
+
