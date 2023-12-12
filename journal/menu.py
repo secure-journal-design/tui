@@ -12,10 +12,10 @@ from validation.regex import pattern
 class Description:
     value: str
 
-    def _post_init_(self):
+    def __post_init__(self):
         validate('Description.value', self.value, min_len=1, max_len=1000, custom=pattern(r'[0-9A-Za-z ;.,_-]*'))
 
-    def _str_(self):
+    def __str__(self):
         return self.value
 
 
@@ -24,10 +24,10 @@ class Description:
 class Key:
     value: str
 
-    def _post_init_(self):
+    def __post_init__(self):
         validate('Key.value', self.value, min_len=1, max_len=10, custom=pattern(r'[0-9A-Za-z_-]*'))
 
-    def _str_(self):
+    def __str__(self):
         return self.value
 
 
@@ -40,8 +40,7 @@ class Entry:
     is_exit: bool = field(default=False)
 
     @staticmethod
-    def create(key: str, description: str, on_selected: Callable[[], None] = lambda: None,
-               is_exit: bool = False) -> 'Entry':
+    def create(key: str, description: str, on_selected: Callable[[], None]=lambda: None, is_exit: bool=False) -> 'Entry':
         return Entry(Key(key), Description(description), on_selected, is_exit)
 
 
@@ -54,7 +53,7 @@ class Menu:
     __key2entry: Dict[Key, Entry] = field(default_factory=dict, repr=False, init=False)
     create_key: InitVar[Any] = field(default='it must be Builder.__create_key')
 
-    def _post_init_(self, create_key: Any):
+    def __post_init__(self, create_key: Any):
         validate('create_key', create_key, custom=Menu.Builder.is_valid_key)
 
     def _add_entry(self, value: Entry, create_key: Any) -> None:
@@ -68,10 +67,10 @@ class Menu:
 
     def __print(self) -> None:
         length = len(str(self.description))
-        fmt = '*{}{}{}*'
-        print(fmt.format('', '' * length, '*'))
+        fmt = '***{}{}{}***'
+        print(fmt.format('*', '*' * length, '*'))
         print(fmt.format(' ', self.description.value, ' '))
-        print(fmt.format('', '' * length, '*'))
+        print(fmt.format('*', '*' * length, '*'))
         self.auto_select()
         for entry in self.__entries:
             print(f'{entry.key}:\t{entry.description}')
@@ -100,7 +99,7 @@ class Menu:
         __menu: Optional['Menu']
         __create_key = object()
 
-        def _init_(self, description: Description, auto_select: Callable[[], None] = lambda: None):
+        def __init__(self, description: Description, auto_select: Callable[[], None]=lambda: None):
             self.__menu = Menu(description, auto_select, self.__create_key)
 
         @staticmethod

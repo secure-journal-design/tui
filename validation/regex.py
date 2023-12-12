@@ -10,5 +10,6 @@ def pattern(regex: str) -> Callable[[str], bool]:
 
     def res(value):
         return bool(r.fullmatch(value))
-    res._name_ = f'pattern({regex})'
+
+    res.__name__ = f'pattern({regex})'
     return res
