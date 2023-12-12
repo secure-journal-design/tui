@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "tui"
+name = "TUI"
 version = "0.1.0"
 description = ""
 authors = ["lorenzo <adducilorenzo@hotmail.it>"]
