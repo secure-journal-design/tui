@@ -40,7 +40,8 @@ class Entry:
     is_exit: bool = field(default=False)
 
     @staticmethod
-    def create(key: str, description: str, on_selected: Callable[[], None]=lambda: None, is_exit: bool=False) -> 'Entry':
+    def create(key: str, description: str, on_selected: Callable[[], None] = lambda: None,
+               is_exit: bool = False) -> 'Entry':
         return Entry(Key(key), Description(description), on_selected, is_exit)
 
 
@@ -53,7 +54,7 @@ class Menu:
     __key2entry: Dict[Key, Entry] = field(default_factory=dict, repr=False, init=False)
     create_key: InitVar[Any] = field(default='it must be Builder.__create_key')
 
-    def __post_init__(self, create_key: Any):
+    def __post_init__(self, create_key: Any) -> None:
         validate('create_key', create_key, custom=Menu.Builder.is_valid_key)
 
     def _add_entry(self, value: Entry, create_key: Any) -> None:
@@ -99,7 +100,7 @@ class Menu:
         __menu: Optional['Menu']
         __create_key = object()
 
-        def __init__(self, description: Description, auto_select: Callable[[], None]=lambda: None):
+        def __init__(self, description: Description, auto_select: Callable[[], None] = lambda: None):
             self.__menu = Menu(description, auto_select, self.__create_key)
 
         @staticmethod

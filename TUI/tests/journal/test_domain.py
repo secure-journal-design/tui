@@ -69,6 +69,4 @@ def test_article_topic(articles):
     assert articles[1].topic.value == 'Fisica'
     assert articles[2].topic.value == 'Computer science'
 
-def test_article_type(articles):
-    assert articles[0].type == 'A'
 

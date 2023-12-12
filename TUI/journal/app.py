@@ -13,17 +13,19 @@ class App:
         self.__journal = Journal()
         test_article = Article(3, 20, datetime.fromtimestamp(1702390272), datetime.fromtimestamp(1702390272), Topic('Computer science'), Title('answer set programming (ASP)'), Body(                "L'answer set programming (ASP) è una forma di programmazione logica di tipo dichiarativo utilizzato per problemi di ricerca complessi (in primis NP-difficili), basata sulla semantica del modello stabile"), 120, Subheading('Answer Set Programming: advanced development'))
         self.__journal.add_article(test_article)
-        self.__menu.run()
 
     def __printArticles(self) -> None:
         for index in range(self.__journal.articles()):
             article = self.__journal.article(index)
             print(article.article_id, article.topic)
 
+    def run(self):
+        self.__menu.run()
+
 
 def main(name: str):
     if name == '__main__':
-        App()
+        App().run()
 
 
 main(__name__)
