@@ -112,19 +112,5 @@ class Journal:
     def sort_by_like(self):
         self.__articles.sort(key=lambda x: -x.likes)
 
-    def search_by_topic(self, topic: Topic):
-        for article in self.__articles:
-            if article.topic != topic.value:
-                self.__articles.remove(article)
-
     def clear(self):
         self.__articles.clear()
-
-
-
-
-
-
-
-
-

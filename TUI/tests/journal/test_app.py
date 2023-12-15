@@ -1,16 +1,16 @@
-# import dataclasses
-# from dataclasses import InitVar
-# from pathlib import Path
-# from typing import Any
-# from unittest.mock import patch, mock_open, Mock, call
-#
-# import pytest
-# import typeguard
-#
-# from TUI.journal.app import App, main
-# from TUI.journal.domain import Article
+import dataclasses
+from dataclasses import InitVar
+from pathlib import Path
+from typing import Any
+from unittest.mock import patch, mock_open, Mock, call
 
-#
+import pytest
+import typeguard
+
+from TUI.journal.app import App, main
+from TUI.journal.domain import Article
+
+
 # @pytest.fixture
 # def mock_path():
 #     Path.exists = Mock()

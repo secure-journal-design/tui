@@ -30,7 +30,7 @@ class App:
         self.__loadArticles()
 
     def __loadArticles(self):
-        res = requests.get(url=f'{api_server}/articles/editor/', headers={'Authorization': f'Token {App.__key}'}, cookies={'sessionid':f'{App.__key}', 'csrftoken': f'{App.__csrftoken}'})
+        res = requests.get(url=f'{api_server}/articles/', headers={'Authorization': f'Token {App.__key}'}, cookies={'sessionid':f'{App.__key}', 'csrftoken': f'{App.__csrftoken}'})
         for article in res.json():
             self.__journal.add_article(Article(article['id'],
                                                article['author']['id'],
@@ -43,8 +43,8 @@ class App:
     def __printArticles(self) -> None:
         print_sep = lambda: print('-' * 150)
         print_sep()
-        fmt = '%3s %-35.35s %-30.30s %-40.35s %-40.35s %-6s'
-        print(fmt % ('#', 'TITLE', 'TOPIC', 'BODY', 'CREATED_AT','LIKE'))
+        fmt = '%3s %-35.35s %-30.30s %-40.35s %-20.20s %-2s'
+        print(fmt % ('#', 'TITLE', 'TOPIC', 'BODY', 'CREATED_AT', 'LIKE'))
         print_sep()
 
         for index in range(self.__journal.articles()):
@@ -126,7 +126,12 @@ class App:
             return int(value)
 
         topic = self.__read('Topic', Topic)
-        self.__journal.search_by_topic(topic)
+        new_journal = Journal()
+        for i in range(self.__journal.articles()):
+            if self.__journal.article(i).topic == topic.value:
+                new_journal.add_article(self.__journal.article(i))
+        self.__journal = new_journal
+
 
     def __refresh(self):
         self.__journal.clear()
