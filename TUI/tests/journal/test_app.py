@@ -1,14 +1,15 @@
-# import dataclasses
-# from dataclasses import InitVar
-# from pathlib import Path
-# from typing import Any
-# from unittest.mock import patch, mock_open, Mock, call
-#
-# import pytest
-# import typeguard
-#
-# from TUI.journal.app import App, main
-#
+import dataclasses
+from dataclasses import InitVar
+from pathlib import Path
+from typing import Any
+from unittest.mock import patch, mock_open, Mock, call
+
+import pytest
+import typeguard
+
+from TUI.journal.app import App, main
+from TUI.journal.domain import Article
+
 #
 # @pytest.fixture
 # def mock_path():
@@ -33,22 +34,22 @@
 #         mocked_path_exists.return_value = False
 #         with patch('builtins.open', mock_open()):
 #             main('__main__')
-#             mocked_print.assert_any_call('*** LaRusso Auto Group ***')
+#             mocked_print.assert_any_call('*** Secure Journal Design ***')
 #             mocked_print.assert_any_call('0:\tExit')
-#             mocked_print.assert_any_call('Bye!')
 #             mocked_input.assert_called()
 #
 #
 # @patch('builtins.input', side_effect=['0'])
 # @patch('builtins.print')
-# def test_app_load_datafile(mocked_print, mocked_input, mock_path, data):
+# def test_app_load_from_api(mocked_print, mocked_input, mock_path, data):
 #     with patch('builtins.open', mock_open(read_data=data)):
 #         App().run()
 #     mock_path.exists.assert_called_once()
 #     assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
 #     mocked_input.assert_called()
 #
-#
+
+
 # @patch('builtins.input', side_effect=['0'])
 # @patch('builtins.print')
 # def test_app_handles_corrupted_datafile(mocked_print, mocked_input, mock_path):
