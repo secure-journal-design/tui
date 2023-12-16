@@ -11,12 +11,12 @@ from TUI.journal.app import App, main
 from TUI.journal.domain import Article
 
 
-# @pytest.fixture
-# def mock_path():
-#     Path.exists = Mock()
-#     Path.exists.return_value = True
-#     return Path
-#
+@pytest.fixture
+def mock_path():
+    Path.exists = Mock()
+    Path.exists.return_value = True
+    return Path
+
 #
 # @pytest.fixture
 # def data():
@@ -25,61 +25,20 @@ from TUI.journal.domain import Article
 #         ['Moto', 'CA220NI', 'Kawasaki', 'Ninja', '99.99'],
 #     ]
 #     return '\n'.join(['\t'.join(d) for d in data])
-#
-#
-# @patch('builtins.input', side_effect=['0'])
-# @patch('builtins.print')
-# def test_app_main(mocked_print, mocked_input):
-#     with patch.object(Path, 'exists') as mocked_path_exists:
-#         mocked_path_exists.return_value = False
-#         with patch('builtins.open', mock_open()):
-#             main('__main__')
-#             mocked_print.assert_any_call('*** Secure Journal Design ***')
-#             mocked_print.assert_any_call('0:\tExit')
-#             mocked_input.assert_called()
-#
-#
-# @patch('builtins.input', side_effect=['0'])
-# @patch('builtins.print')
-# def test_app_load_from_api(mocked_print, mocked_input, mock_path, data):
-#     with patch('builtins.open', mock_open(read_data=data)):
-#         App().run()
-#     mock_path.exists.assert_called_once()
-#     assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
-#     mocked_input.assert_called()
-#
 
 
-# @patch('builtins.input', side_effect=['0'])
-# @patch('builtins.print')
-# def test_app_handles_corrupted_datafile(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open(read_data='xyz')):
-#         App().run()
-#     mocked_print.assert_any_call('Continuing with an empty list of vehicles...')
-#     mocked_input.assert_called()
-#
-#
-# @patch('builtins.input', side_effect=['0'])
-# @patch('builtins.print')
-# def test_app_handles_unknown_type_in_datafile(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open(read_data='Airplane\tCA220NE\tFiat\tPunto\t199.99')):
-#         App().run()
-#     mocked_print.assert_any_call('Continuing with an empty list of vehicles...')
-#     mocked_input.assert_called()
-#
-#
-# @patch('builtins.input', side_effect=['1', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
-# @patch('builtins.print')
-# def test_app_add_car(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open()) as mocked_open:
-#         App().run()
-#     assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
-#
-#     handle = mocked_open()
-#     handle.write.assert_called_once_with('Car\tCA220NE\tFiat\tPunto\t199.99\n')
-#     mocked_input.assert_called()
-#
-#
+@patch('builtins.input', side_effect=['1', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
+@patch('builtins.print')
+def test_app_add_car(mocked_print, mocked_input, mock_path):
+    with patch('builtins.open', mock_open()) as mocked_open:
+        App().run()
+    assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
+
+    handle = mocked_open()
+    handle.write.assert_called_once_with('Car\tCA220NE\tFiat\tPunto\t199.99\n')
+    mocked_input.assert_called()
+
+
 # @patch('builtins.input', side_effect=['1', 'ca220ne', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
 # @patch('builtins.print')
 # def test_app_add_car_resists_to_wrong_plate(mocked_print, mocked_input, mock_path):

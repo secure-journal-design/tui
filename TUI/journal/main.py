@@ -1,44 +1,29 @@
 import requests
 
+# Set your Django API base URL
+api_base_url = 'http://localhost:8000/api/v1/'
 
-api_server = 'http://localhost:8000/api/v1'
+# Replace 'your_username' and 'your_password' with valid credentials
+credentials = {'username': 'Lorenzo2', 'password': 'Test_234'}
 
+# Obtain the authentication token
+token_response = requests.post(api_base_url + 'auth/login/', data=credentials)
+print(token_response)
+token = token_response.json().get('key')
 
-def login():
-    # username = input("Username: ").strip()
-    # pwd = input("Password: ").strip()
-    username = "Lorenzo"
-    pwd = "p7Zn#sM#JAfPA@6"
+# Check if the token was obtained successfully
+if token:
+    # Set up headers with the authentication token
+    headers = {'Authorization': f'Token {token}'}
 
-    res = requests.post(url=f'{api_server}/auth/login/', data={'username': username, 'password': pwd})
-    if res.status_code != 200:
-        return None
-    json = res.json()
-    return json['key']
+    # Example: Make a GET request to the MyModel API endpoint
+    mymodel_response = requests.get(api_base_url + 'articles/editor/', headers=headers)
 
-
-def logout(key):
-    res = requests.post(url=f'{api_server}/auth/logout/', headers={'Authorization': f'Token {key}'})
-    if res.status_code == 200:
-        print("Logged out!")
+    # Check the response
+    if mymodel_response.status_code == 200:
+        mymodel_data = mymodel_response.json()
+        print("MyModel data:", mymodel_data)
     else:
-        print("Log out failed")
-    print()
-
-
-def fetch_articxles(key):
-    res = requests.get(url=f'{api_server}/articles/', headers={'Authorization': f'Token {key}'})
-    if res.status_code != 200:
-        return None
-    return res.json()
-
-
-key = login()
-print(key)
-
-if key is not None:
-    print(fetch_articxles(key))
-    logout(key)
-
-
-
+        print("Failed to fetch MyModel data. Status code:", mymodel_response.status_code)
+else:
+    print("Failed to obtain the authentication token. Status code:", token_response.status_code)

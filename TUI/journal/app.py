@@ -12,7 +12,6 @@ api_server = 'http://localhost:8000/api/v1'
 
 class App:
     __key: str = None
-    __csrftoken: str = None
 
     def __init__(self):
         self.__login()
@@ -30,8 +29,9 @@ class App:
         self.__loadArticles()
 
     def __loadArticles(self):
-        res = requests.get(url=f'{api_server}/articles/', headers={'Authorization': f'Token {App.__key}'}, cookies={'sessionid':f'{App.__key}', 'csrftoken': f'{App.__csrftoken}'})
+        res = requests.get(url=f'{api_server}/articles/', headers={'Authorization': f'Token {App.__key}'})
         for article in res.json():
+            #print(article)
             self.__journal.add_article(Article(article['id'],
                                                article['author']['id'],
                                                datetime.strptime(article['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ'),
@@ -94,8 +94,6 @@ class App:
             if res.status_code == 200:
                 json = res.json()
                 App.__key = json['key']
-                print(res.cookies['csrftoken'])
-                App.__csrftoken = res.cookies['csrftoken']
             else:
                 print(res.json()['non_field_errors'][0])
 
@@ -139,10 +137,10 @@ class App:
 
     def __add_article(self):
         article = ArticleToSend(*self.__read_article())
-        res = requests.post(url=f'{api_server}/articles/editor/', headers={'Authorization': f'Token {App.__key}'}, data={"topic": article.topic.value,
-                                                                                                                         "title": article.title.value,
-                                                                                                                         "subheading": article.subheading.value,
-                                                                                                                         "body": article.body.value,
+        res = requests.post(url=f'{api_server}/articles/editor/', headers={'Authorization': f'Token {App.__key}'}, data={"topic": f'{article.topic.value}',
+                                                                                                                         "title": f'{article.title.value}',
+                                                                                                                         "subheading": f'{article.subheading.value}',
+                                                                                                                         "body": f'{article.body.value}',
                                                                                                                          })
         print(res)
         print('Article added!')
