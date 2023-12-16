@@ -48,6 +48,24 @@ class Body:
 
 @typechecked
 @dataclass(frozen=True)
+class Username:
+    value: str
+
+    def __post_init__(self):
+        validate('username', self.value, max_len=150, custom=pattern(r'[0-9A-Za-z_@+\-]*'))
+
+
+@typechecked
+@dataclass(frozen=True)
+class Password:
+    value: str
+
+    def __post_init__(self):
+        validate('password', self.value, max_len=150)
+
+
+@typechecked
+@dataclass(frozen=True)
 class Subheading:
     value: str
 
@@ -67,9 +85,16 @@ class ID:
 
 @typechecked
 @dataclass(frozen=True)
+class Author:
+    id: ID
+    username: Username
+
+
+@typechecked
+@dataclass(frozen=True, order=True)
 class Article:
     article_id: ID
-    author_id: ID
+    author: Author
     created_at: datetime
     updated_at: datetime
     topic: Topic
@@ -114,3 +139,6 @@ class Journal:
 
     def clear(self):
         self.__articles.clear()
+
+
+

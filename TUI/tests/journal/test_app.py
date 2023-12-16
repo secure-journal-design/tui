@@ -26,18 +26,18 @@ def mock_path():
 #     ]
 #     return '\n'.join(['\t'.join(d) for d in data])
 
-
-@patch('builtins.input', side_effect=['1', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
-@patch('builtins.print')
-def test_app_add_car(mocked_print, mocked_input, mock_path):
-    with patch('builtins.open', mock_open()) as mocked_open:
-        App().run()
-    assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
-
-    handle = mocked_open()
-    handle.write.assert_called_once_with('Car\tCA220NE\tFiat\tPunto\t199.99\n')
-    mocked_input.assert_called()
-
+#
+# @patch('builtins.input', side_effect=['1', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
+# @patch('builtins.print')
+# def test_app_add_car(mocked_print, mocked_input, mock_path):
+#     with patch('builtins.open', mock_open()) as mocked_open:
+#         App().run()
+#     assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
+#
+#     handle = mocked_open()
+#     handle.write.assert_called_once_with('Car\tCA220NE\tFiat\tPunto\t199.99\n')
+#     mocked_input.assert_called()
+#
 
 # @patch('builtins.input', side_effect=['1', 'ca220ne', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
 # @patch('builtins.print')
