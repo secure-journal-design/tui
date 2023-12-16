@@ -68,10 +68,7 @@ class App:
         print(f'TITOLO: {article.title}', "\n")
         print(f'TOPIC: {article.topic}', "\n")
         print(f'SUBHEAD: {article.subheading}', "\n")
-        for i in range(len(article.body)):
-            print(article.body[i], end="")
-            if i % 100 == 0 and i != 0:
-                print()
+        print(f'BODY: {article.body}', "\n")
         print()
 
     @staticmethod
