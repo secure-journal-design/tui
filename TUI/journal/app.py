@@ -119,10 +119,6 @@ class App:
         self.__journal.sort_by_oldest()
 
     def __search_by_topic(self) -> None:
-        def builder(value: str) -> int:
-            validate('value', int(value), min_value=0, max_value=self.__journal.articles())
-            return int(value)
-
         topic = self.__read('Topic', Topic)
         new_journal = Journal()
         for i in range(self.__journal.articles()):
