@@ -109,8 +109,8 @@ class Article:
 class ArticleToSend:
     topic: Topic
     title: Title
-    body: Body
     subheading: Subheading
+    body: Body
 
 
 @typechecked

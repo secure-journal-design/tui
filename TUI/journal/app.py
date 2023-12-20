@@ -32,8 +32,9 @@ class App:
 
     def __loadArticles(self) -> None:
         res = requests.get(url=f'{api_server}/articles/', headers={'Authorization': f'Token {App.__key}'})
+        print(len(res.json()))
         for article in res.json():
-            #print(article)
+            print(article)
             self.__journal.add_article(Article(article['id'],
                                                Author(article['author']['id'], article['author']['username']),
                                                datetime.strptime(article['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ'),
@@ -96,6 +97,7 @@ class App:
                 App.__key = json['key']
             else:
                 print(res.json()['non_field_errors'][0])
+        print('LOGGED IN')
 
     @staticmethod
     def __logout() -> None:
@@ -142,7 +144,14 @@ class App:
                                   "subheading": f'{article.subheading.value}',
                                   "body": f'{article.body.value}',
                                   })
-        print('Article added!')
+        print(article)
+        print(res.text)
+        if res.status_code == 201:
+            print('Article added!')
+        else:
+            print('Error')
+        self.__refresh()
+
 
     def __read_article(self) -> Tuple[Title, Topic, Subheading, Body]:
         title = self.__read('Title', Title)
@@ -156,14 +165,14 @@ class App:
             validate('value', int(value), min_value=0, max_value=self.__journal.articles())
             return int(value)
 
-        index = self.__read('Index (0 to cancel): ', builder)
+        index = self.__read('Index (0 to cancel)', builder)
         if index == 0:
             print('Cancelled')
             return
         article = self.__journal.article(index - 1)
-        res = requests.post(url=f'{api_server}/article/like/', headers={'Authorization': f'Token {App.__key}'},
-                            data={"id": article.article_id})
+        res = requests.post(url=f'{api_server}/articles/{article.article_id}/like/', headers={'Authorization': f'Token {App.__key}'})
         print(res.status_code)
+        self.__refresh()
 
 
 def main(name: str):
