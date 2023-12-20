@@ -32,9 +32,7 @@ class App:
 
     def __loadArticles(self) -> None:
         res = requests.get(url=f'{api_server}/articles/', headers={'Authorization': f'Token {App.__key}'})
-        print(len(res.json()))
         for article in res.json():
-            print(article)
             self.__journal.add_article(Article(article['id'],
                                                Author(article['author']['id'], article['author']['username']),
                                                datetime.strptime(article['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ'),
@@ -144,8 +142,6 @@ class App:
                                   "subheading": f'{article.subheading.value}',
                                   "body": f'{article.body.value}',
                                   })
-        print(article)
-        print(res.text)
         if res.status_code == 201:
             print('Article added!')
         else:
@@ -171,7 +167,6 @@ class App:
             return
         article = self.__journal.article(index - 1)
         res = requests.post(url=f'{api_server}/articles/{article.article_id}/like/', headers={'Authorization': f'Token {App.__key}'})
-        print(res.status_code)
         self.__refresh()
 
 
