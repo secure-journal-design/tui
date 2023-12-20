@@ -2,125 +2,34 @@ import dataclasses
 from dataclasses import InitVar
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch, mock_open, Mock, call
-
-import pytest
-import typeguard
+from unittest import mock
+from unittest.mock import MagicMock, patch, mock_open, Mock, call
 
 from TUI.journal.app import App, main
 from TUI.journal.domain import Article
 
+@patch('builtins.input', side_effect=['2','1','0'])
+@patch('builtins.print')
+@patch('TUI.journal.app.requests.post')
+@patch('TUI.journal.app.requests.get')
+def test_app_success(mock_get, mock_post, mock_print, mock_input):
+    mock_response_login = Mock()
+    mock_response_login.status_code = 200
+    mock_response_login.json.return_value = {'key': 'test_key'}
 
-@pytest.fixture
-def mock_path():
-    Path.exists = Mock()
-    Path.exists.return_value = True
-    return Path
+    mock_response_get = Mock()
+    mock_response_get.status_code = 200
+    mock_response_get.json.return_value = [
+        {'id': 1, 'author': {'id': 1, 'username': 'user'}, 
+         'created_at': '2023-01-01T12:00:00.000Z', 'updated_at': '2023-01-01T14:30:00.000Z', 
+         'topic': 'Technology', 'title': 'Sample Article', 'body': 'This is a sample article body.', 
+         'num_likes': 42, 'subheading': 'A sample subheading'}]
 
-#
-# @pytest.fixture
-# def data():
-#     data = [
-#         ['Car', 'CA220NE', 'Fiat', 'Punto', '199.99'],
-#         ['Moto', 'CA220NI', 'Kawasaki', 'Ninja', '99.99'],
-#     ]
-#     return '\n'.join(['\t'.join(d) for d in data])
+    mock_post.return_value = mock_response_login
+    mock_get.return_value = mock_response_get
 
-#
-# @patch('builtins.input', side_effect=['1', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
-# @patch('builtins.print')
-# def test_app_add_car(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open()) as mocked_open:
-#         App().run()
-#     assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
-#
-#     handle = mocked_open()
-#     handle.write.assert_called_once_with('Car\tCA220NE\tFiat\tPunto\t199.99\n')
-#     mocked_input.assert_called()
-#
-
-# @patch('builtins.input', side_effect=['1', 'ca220ne', 'CA220NE', 'Fiat', 'Punto', '199.99', '0'])
-# @patch('builtins.print')
-# def test_app_add_car_resists_to_wrong_plate(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open()) as mocked_open:
-#         App().run()
-#     assert list(filter(lambda x: 'CA220NE' in str(x), mocked_print.mock_calls))
-#     mocked_input.assert_called()
-#
-#     handle = mocked_open()
-#     handle.write.assert_called_once_with('Car\tCA220NE\tFiat\tPunto\t199.99\n')
-#
-#
-# @patch('builtins.input', side_effect=['2', 'CA220NI', 'Kawasaki', 'Ninja', '1000.00', '0'])
-# @patch('builtins.print')
-# def test_app_add_moto(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open()) as mocked_open:
-#         App().run()
-#     assert list(filter(lambda x: 'CA220NI' in str(x), mocked_print.mock_calls))
-#     mocked_input.assert_called()
-#
-#     handle = mocked_open()
-#     handle.write.assert_called_once_with('Moto\tCA220NI\tKawasaki\tNinja\t1000.00\n')
-#
-#
-# @patch('builtins.input', side_effect=['3', '1', '0'])
-# @patch('builtins.print')
-# def test_app_remove_vehicle(mocked_print, mocked_input, mock_path, data):
-#     with patch('builtins.open', mock_open(read_data=data)) as mocked_open:
-#         App().run()
-#     mocked_input.assert_called()
-#     mocked_print.assert_called()
-#
-#     handle = mocked_open()
-#     handle.write.assert_called_once_with('Moto\tCA220NI\tKawasaki\tNinja\t99.99\n')
-#
-#
-# @patch('builtins.input', side_effect=['3', '0', '0'])
-# @patch('builtins.print')
-# def test_app_remove_vehicle_can_be_cancelled(mocked_print, mocked_input, mock_path):
-#     with patch('builtins.open', mock_open()):
-#         App().run()
-#     mocked_input.assert_called()
-#     mocked_print.assert_any_call('Cancelled!')
-#
-#
-# @patch('builtins.input', side_effect=['5', '0'])
-# @patch('builtins.print')
-# def test_app_sort_by_price(mocked_print, mocked_input, mock_path, data):
-#     with patch('builtins.open', mock_open(read_data=data)) as mocked_open:
-#         App().run()
-#     mocked_input.assert_called()
-#     mocked_print.assert_called()
-#
-#     handle = mocked_open()
-#     assert handle.write.mock_calls == [
-#         call('Moto\tCA220NI\tKawasaki\tNinja\t99.99\n'),
-#         call('Car\tCA220NE\tFiat\tPunto\t199.99\n'),
-#     ]
-#
-#
-# @patch('builtins.input', side_effect=['5', '4', '0'])
-# @patch('builtins.print')
-# def test_app_sort_by_producer(mocked_print, mocked_input, mock_path, data):
-#     with patch('builtins.open', mock_open(read_data=data)) as mocked_open:
-#         App().run()
-#     mocked_input.assert_called()
-#     mocked_print.assert_called()
-#
-#     handle = mocked_open()
-#     assert handle.write.mock_calls == [
-#         call('Moto\tCA220NI\tKawasaki\tNinja\t99.99\n'),
-#         call('Car\tCA220NE\tFiat\tPunto\t199.99\n'),
-#         call('Car\tCA220NE\tFiat\tPunto\t199.99\n'),
-#         call('Moto\tCA220NI\tKawasaki\tNinja\t99.99\n'),
-#     ]
-#
-#
-# @patch('builtins.input', side_effect=['0'])
-# @patch('builtins.print')
-# def test_app_global_exception_handler(mocked_print, mocked_input):
-#     with patch.object(Path, 'exists') as mocked_path_exits:
-#         mocked_path_exits.side_effect = Mock(side_effect=Exception('Test'))
-#         App().run()
-#     assert mocked_input.mock_calls == []
-#     assert list(filter(lambda x: 'Panic error!' in str(x), mocked_print.mock_calls))
+    App().run()
+    assert any('BODY: This is a sample article body.' in str(call) for call in mock_print.mock_calls)
+    assert any('TITOLO: Sample Article' in str(call) for call in mock_print.mock_calls)
+    assert any('SUBHEAD: A sample subheading' in str(call) for call in mock_print.mock_calls)
+    assert any('TOPIC: Technology' in str(call) for call in mock_print.mock_calls)
