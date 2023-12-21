@@ -7,6 +7,7 @@ from valid8 import ValidationError, validate
 from TUI.journal.menu import Menu, Description, Entry
 from TUI.journal.domain import Journal, Subheading, Body, Title, Topic, Article, ID, ArticleToSend, Username, Password, \
     Author
+import getpass
 
 api_server = 'http://localhost:8000/api/v1'
 
@@ -83,10 +84,8 @@ class App:
     @staticmethod
     def __login() -> None:
         while App.__key is None:
-            # username = App.__read('Username', Username)
-            # pwd = App.__read('Password', Password)
-            username = Username("Lorenzo2")
-            pwd = Password("Test_234")
+            username = App.__read('Username', Username)
+            pwd = App.__read('Password', Password)
 
             res = requests.post(url=f'{api_server}/auth/login/',
                                 data={'username': username.value, 'password': pwd.value})
@@ -144,7 +143,6 @@ class App:
             print('Error')
         self.__refresh()
 
-
     def __read_article(self) -> Tuple[Title, Topic, Subheading, Body]:
         title = self.__read('Title', Title)
         topic = self.__read('Topic', Topic)
@@ -162,7 +160,8 @@ class App:
             print('Cancelled')
             return
         article = self.__journal.article(index - 1)
-        res = requests.post(url=f'{api_server}/articles/{article.article_id}/like/', headers={'Authorization': f'Token {App.__key}'})
+        res = requests.post(url=f'{api_server}/articles/{article.article_id}/like/',
+                            headers={'Authorization': f'Token {App.__key}'})
         self.__refresh()
 
 

@@ -10,7 +10,7 @@ from TUI.journal.app import App, main
 from TUI.journal.domain import Article
 
 
-@patch('builtins.input', side_effect=['0'])
+@patch('builtins.input', side_effect=['User', 'Psssword', '0'])
 @patch('builtins.print')
 @patch('TUI.journal.app.requests.post')
 @patch('TUI.journal.app.requests.get')
@@ -34,7 +34,7 @@ def test_app_success(mock_get, mock_post, mock_print, mock_input):
     assert any('Bye' in str(call) for call in mock_print.mock_calls)
 
 
-@patch('builtins.input', side_effect=['2', '1', '0'])
+@patch('builtins.input', side_effect=['User', 'Psssword', '2', '1', '0'])
 @patch('builtins.print')
 @patch('TUI.journal.app.requests.post')
 @patch('TUI.journal.app.requests.get')
@@ -61,7 +61,7 @@ def test_app_print_article(mock_get, mock_post, mock_print, mock_input):
     assert any('TOPIC: Technology' in str(call) for call in mock_print.mock_calls)
 
 
-@patch('builtins.input', side_effect=['2', '1', '3', 'Quantum Computing', '0'])
+@patch('builtins.input', side_effect=['User', 'Psssword', '2', '1', '3', 'Quantum Computing', '0'])
 @patch('builtins.print')
 @patch('TUI.journal.app.requests.post')
 @patch('TUI.journal.app.requests.get')
@@ -91,7 +91,7 @@ def test_app_search_by_topic(mock_get, mock_post, mock_print, mock_input):
     assert any('Quantum Computing' in str(call) for call in mock_print.mock_calls)
 
 
-@patch('builtins.input', side_effect=['1',
+@patch('builtins.input', side_effect=['User', 'Psssword', '1',
                                       'Ibrahimovic primo giorno a Milanello da consulente',
                                       'Sport',
                                       'Lo svedese è tornato nel centro sportivo nelle nuove vesti di advisor della proprietà',
@@ -147,7 +147,7 @@ def test_app_add_article(mock_get, mock_post, mock_print, mock_input):
     assert modified_article['title'] == "Ibrahimovic primo giorno a Milanello da consulente"
 
 
-@patch('builtins.input', side_effect=['7', '1', '0'])
+@patch('builtins.input', side_effect=['User', 'Psssword', '7', '1', '0'])
 @patch('builtins.print')
 @patch('TUI.journal.app.requests.post')
 @patch('TUI.journal.app.requests.get')
@@ -189,7 +189,7 @@ def test_app_put_like(mock_get, mock_post, mock_print, mock_input):
     assert modified_article['num_likes'] == 43
 
 
-@patch('builtins.input', side_effect=['6', '0'])
+@patch('builtins.input', side_effect=['User', 'Psssword', '6', '0'])
 @patch('builtins.print')
 @patch('TUI.journal.app.requests.post')
 @patch('TUI.journal.app.requests.get')
